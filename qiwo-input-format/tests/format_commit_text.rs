@@ -45,3 +45,35 @@ fn empty_commit_text_stays_empty() {
     assert_eq!(enabled(""), "");
     assert_eq!(disabled(""), "");
 }
+
+#[test]
+fn existing_whitespace_prevents_duplicate_spaces() {
+    assert_eq!(enabled("中文 abc"), "中文 abc");
+    assert_eq!(enabled("abc 中文"), "abc 中文");
+    assert_eq!(enabled("中文 123"), "中文 123");
+    assert_eq!(enabled("123 中文"), "123 中文");
+    assert_eq!(enabled(", 中文"), ", 中文");
+}
+
+#[test]
+fn latin_letters_and_digits_stay_grouped() {
+    assert_eq!(enabled("ABC123"), "ABC123");
+    assert_eq!(enabled("v1"), "v1");
+    assert_eq!(enabled("中文ABC123测试"), "中文 ABC123 测试");
+}
+
+#[test]
+fn half_width_punctuation_before_han_gets_following_space_only() {
+    assert_eq!(enabled(",中文测试,"), ", 中文测试,");
+    assert_eq!(enabled(":中文"), ": 中文");
+    assert_eq!(enabled("中文,"), "中文,");
+}
+
+#[test]
+fn excluded_character_classes_do_not_trigger_spacing() {
+    assert_eq!(enabled("あ中文"), "あ中文");
+    assert_eq!(enabled("한中文"), "한中文");
+    assert_eq!(enabled("😀中文"), "😀中文");
+    assert_eq!(enabled("Ａ中文"), "Ａ中文");
+    assert_eq!(enabled("中文Ａ"), "中文Ａ");
+}
