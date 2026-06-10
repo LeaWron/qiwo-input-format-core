@@ -18,6 +18,36 @@ pub(crate) fn format_internal(commit_text: &str) -> String {
     output
 }
 
+pub(crate) fn format_with_context(
+    commit_text: &str,
+    before_cursor: Option<&str>,
+    after_cursor: Option<&str>,
+) -> String {
+    let mut output = format_internal(commit_text);
+
+    if output.is_empty() {
+        return output;
+    }
+
+    if let Some(before) = before_cursor {
+        if let (Some(left), Some(right)) = (before.chars().next_back(), output.chars().next()) {
+            if need_space_between(left, right) {
+                output.insert(0, ' ');
+            }
+        }
+    }
+
+    if let Some(after) = after_cursor {
+        if let (Some(left), Some(right)) = (output.chars().next_back(), after.chars().next()) {
+            if need_space_between(left, right) {
+                output.push(' ');
+            }
+        }
+    }
+
+    output
+}
+
 pub(crate) fn need_space_between(left: char, right: char) -> bool {
     if is_whitespace(left) || is_whitespace(right) {
         return false;
@@ -44,5 +74,19 @@ mod tests {
         assert_eq!(format_internal("ABC123"), "ABC123");
         assert_eq!(format_internal("あ中文"), "あ中文");
         assert_eq!(format_internal("中文Ａ"), "中文Ａ");
+    }
+
+    #[test]
+    fn formats_boundaries_when_surrounding_context_is_available() {
+        assert_eq!(format_with_context("中文", Some("abc"), None), " 中文");
+        assert_eq!(format_with_context("abc", Some("中文"), None), " abc");
+        assert_eq!(format_with_context("中文", Some(","), None), " 中文");
+        assert_eq!(format_with_context("中文", None, Some("abc")), "中文 ");
+        assert_eq!(format_with_context(",", None, Some("中文")), ", ");
+    }
+
+    #[test]
+    fn leaves_empty_commit_text_empty_with_context() {
+        assert_eq!(format_with_context("", Some("abc"), Some("中文")), "");
     }
 }
