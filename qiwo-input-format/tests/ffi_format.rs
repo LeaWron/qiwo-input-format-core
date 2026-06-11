@@ -62,6 +62,13 @@ fn c_abi_formats_available_context_boundaries() {
 }
 
 #[test]
+fn c_abi_does_not_format_across_line_break_context() {
+    assert_eq!(format_via_ffi("abc", Some("中文\n"), None, true), "abc");
+    assert_eq!(format_via_ffi("123", Some("中文\r\n"), None, true), "123");
+    assert_eq!(format_via_ffi("中文", None, Some("\nabc"), true), "中文");
+}
+
+#[test]
 fn c_abi_disabled_option_leaves_commit_text_unchanged() {
     assert_eq!(
         format_via_ffi("中文ABC123测试", Some("abc"), Some("中文"), false),

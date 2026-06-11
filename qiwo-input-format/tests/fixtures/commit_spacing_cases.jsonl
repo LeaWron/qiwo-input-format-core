@@ -5,6 +5,9 @@
 {"commit_text":"中文123","before_cursor":null,"after_cursor":null,"enabled":true,"expected":"中文 123"}
 {"commit_text":"123中文","before_cursor":null,"after_cursor":null,"enabled":true,"expected":"123 中文"}
 {"commit_text":"中文 abc","before_cursor":null,"after_cursor":null,"enabled":true,"expected":"中文 abc"}
+{"commit_text":"中文\nabc","before_cursor":null,"after_cursor":null,"enabled":true,"expected":"中文\nabc"}
+{"commit_text":"abc","before_cursor":"中文\n","after_cursor":null,"enabled":true,"expected":"abc"}
+{"commit_text":"123","before_cursor":"中文\r\n","after_cursor":null,"enabled":true,"expected":"123"}
 {"commit_text":"ABC123","before_cursor":null,"after_cursor":null,"enabled":true,"expected":"ABC123"}
 {"commit_text":"v1","before_cursor":null,"after_cursor":null,"enabled":true,"expected":"v1"}
 {"commit_text":",中文测试,","before_cursor":null,"after_cursor":null,"enabled":true,"expected":", 中文测试,"}

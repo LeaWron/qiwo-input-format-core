@@ -56,6 +56,33 @@ fn existing_whitespace_prevents_duplicate_spaces() {
 }
 
 #[test]
+fn line_breaks_prevent_cross_line_context_spacing() {
+    assert_eq!(enabled("中文\nabc"), "中文\nabc");
+    assert_eq!(
+        format_commit_text(
+            "abc",
+            CommitContext {
+                before_cursor: Some("中文\n"),
+                after_cursor: None,
+            },
+            FormatOptions::default(),
+        ),
+        "abc"
+    );
+    assert_eq!(
+        format_commit_text(
+            "123",
+            CommitContext {
+                before_cursor: Some("中文\r\n"),
+                after_cursor: None,
+            },
+            FormatOptions::default(),
+        ),
+        "123"
+    );
+}
+
+#[test]
 fn latin_letters_and_digits_stay_grouped() {
     assert_eq!(enabled("ABC123"), "ABC123");
     assert_eq!(enabled("v1"), "v1");

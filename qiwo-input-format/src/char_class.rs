@@ -25,6 +25,10 @@ pub(crate) fn is_whitespace(ch: char) -> bool {
     ch.is_whitespace()
 }
 
+pub(crate) fn is_line_break(ch: char) -> bool {
+    matches!(ch, '\n' | '\r' | '\u{0085}' | '\u{2028}' | '\u{2029}')
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -37,6 +41,8 @@ mod tests {
         assert!(is_ascii_alnum('7'));
         assert!(is_ascii_punctuation(','));
         assert!(is_whitespace(' '));
+        assert!(is_line_break('\n'));
+        assert!(is_line_break('\u{2028}'));
     }
 
     #[test]

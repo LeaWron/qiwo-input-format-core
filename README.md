@@ -18,6 +18,7 @@ the commit text that should be inserted.
   adjacent to another character.
 - When before/after cursor text is available, apply the same boundary rule at
   the edge of the committed text.
+- Do not apply before/after cursor boundary spacing across line breaks.
 
 ## Rust API
 
@@ -73,4 +74,3 @@ Frontends are responsible for:
   before inserting text into the target application.
 - Keeping candidate text, preedit text, input codes, dictionaries, and learning
   data unchanged.
-
